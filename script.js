@@ -10,27 +10,38 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+// ===== Chapter pages configuration =====
+// Add all pages of each chapter here
+const chapterPages = {
+  "chapter_1": [
+    "page_1.html","page_2.html","page_3.html","page_4.html","page_5.html",
+    "page_6.html","page_7.html","page_8.html","page_9.html","page_10.html"
+  ],
+  "chapter_2": [
+    "page_1.html","page_2.html","page_3.html","page_4.html","page_5.html",
+    "page_6.html","page_7.html","page_8.html","page_9.html","page_10.html"
+  ],
+  // Add more chapters if needed
+};
+
 // ===== Keyboard navigation =====
-// ArrowRight = go to next page
-// ArrowLeft = go to previous page
+// ArrowRight = next page, ArrowLeft = previous page
 document.addEventListener("keydown", (e) => {
   const currentUrl = window.location.pathname;
-  const parts = currentUrl.split("/"); // ["online-love-story", "chapter_1", "page_1.html"]
+  const parts = currentUrl.split("/"); // ["folder", "chapter_1", "page_1.html"]
   const folder = parts[parts.length - 2]; // "chapter_1"
-  let page = parts[parts.length - 1]; // "page_1.html"
+  const page = parts[parts.length - 1]; // "page_1.html"
 
   if (!page.startsWith("page_")) return;
+  const pages = chapterPages[folder];
+  if (!pages) return; // no pages defined for this chapter
 
-  const pageNum = parseInt(page.replace("page_", "").replace(".html", ""));
-  let nextPage = null;
-  let prevPage = null;
+  const pageIndex = pages.indexOf(page);
+  if (pageIndex === -1) return;
 
-  if (pageNum < 10) nextPage = `page_${pageNum + 1}.html`;
-  if (pageNum > 1) prevPage = `page_${pageNum - 1}.html`;
-
-  if (e.key === "ArrowRight" && nextPage) {
-    window.location.href = `./${nextPage}`;
-  } else if (e.key === "ArrowLeft" && prevPage) {
-    window.location.href = `./${prevPage}`;
+  if (e.key === "ArrowRight" && pageIndex < pages.length - 1) {
+    window.location.href = `./${pages[pageIndex + 1]}`;
+  } else if (e.key === "ArrowLeft" && pageIndex > 0) {
+    window.location.href = `./${pages[pageIndex - 1]}`;
   }
 });
